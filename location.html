@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Finder</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .modal-header, .modal-footer {
+            display: flex;
+            justify-content: center;
+        }
+        .modal-footer {
+            justify-content: space-between;
+        }
+        #mapLinkBtn {
+            display: none;
+            margin-top: 20px;
+            animation: glow 1.5s infinite;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #33cc33; }
+            50% { box-shadow: 0 0 20px #33cc33; }
+            100% { box-shadow: 0 0 5px #33cc33; }
+        }
+        .btn-animate {
+            animation: gradient 1.5s infinite;
+            background-size: 200% 200%;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        iframe {
+            width: 100%;
+            height: 450px;
+            border: 0;
+        }
+        @media (max-width: 767px) {
+            iframe {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="locateBtn" class="btn btn-primary btn-animate">Locate Me</button>
+    <p id="location"></p>
+    <a id="mapLinkBtn" href="#" target="_blank" class="btn btn-success btn-animate">View Route on Google Maps</a>
+    <br><br>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d97396.85028239054!2d79.76668084254887!3d15.161287089579176!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a4b6bb7ce709e65%3A0xd5ab58ad66b20814!2sVeer%20Raghavuni%20Kota%2C%20Andhra%20Pradesh%20523113!5e1!3m2!1sen!2sin!4v1724085352340!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <!-- Modal -->
+    <div class="modal fade" id="permissionModal" tabindex="-1" role="dialog" aria-labelledby="permissionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="permissionModalLabel">Allow Location Access</h5>
+                </div>
+                <div class="modal-body">
+                    This website wants to access your location to show a route. Do you allow this?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Deny</button>
+                    <button type="button" id="allowLocation" class="btn btn-primary">Allow</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('locateBtn').addEventListener('click', function() {
+            $('#permissionModal').modal('show');
+        });
+
+        document.getElementById('allowLocation').addEventListener('click', function() {
+            $('#permissionModal').modal('hide');
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById('location').innerHTML = "Geolocation is not supported by this browser.";
+            }
+        });
+
+        function showPosition(position) {
+            const startLatitude = position.coords.latitude;
+            const startLongitude = position.coords.longitude;
+            
+            document.getElementById('location').innerHTML = `Your Location: Latitude: ${startLatitude}, Longitude: ${startLongitude}`;
+
+            // Use the provided Google Maps route link
+            const mapLink = 'https://maps.app.goo.gl/FtscXSq32kGDVhWz6';
+
+            const mapLinkBtn = document.getElementById('mapLinkBtn');
+            mapLinkBtn.href = mapLink;
+            mapLinkBtn.style.display = 'block';
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById('location').innerHTML = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById('location').innerHTML = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById('location').innerHTML = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById('location').innerHTML = "An unknown error occurred.";
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
