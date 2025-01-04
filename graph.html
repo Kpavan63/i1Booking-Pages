@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Earnings Graph</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton+SC&family=Playwrite+BE+VLG:wght@100..400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    canvas {
+      margin-bottom: 20px;
+      margin-left: -50px;
+    }
+
+    #topEarningLabel {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      position: relative;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 20px;
+      width: 300px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+      background-color: #000000;
+      margin: 1px auto;
+    }
+
+    .card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 10px 0;
+      color: #ffffff;
+    }
+
+    font {
+      color: red;
+      font-family: "Playwrite BE VLG", cursive;
+      font-optical-sizing: auto;
+      font-weight: 900;
+      font-style: normal;
+    }
+
+    .card p {
+      color: #0da841;
+      font-weight: bold;
+    }
+
+    .icon {
+      position: absolute;
+      top: 15px;
+      left: 12%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+    }
+
+    @media (max-width: 600px) {
+      #topEarningLabel {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="topEarningLabel"></div>
+  <canvas id="userEarningsChart" width="100%" height="200"></canvas>
+
+  <script>
+    const transactions = [
+    {"id":"1","name":"K.Pavan kalyan {Team Caption}","phone":"6300972219","catering_details":"Team Head","amount":" Infinity","transaction_id":null,"image_path":null},
+    {"id":"19","name":"Vadde Nagaraju ","phone":"7671922642","catering_details":"Badevaripalem, Village in Andhra Pradesh","amount":"400","transaction_id":"25683653-1934-4810-8b95-465f8511f533","image_path":"uploaded_image.jpg"},
+    {"id":"20","name":"M.K.Deepak","phone":"7842242601","catering_details":"Badevaripalem, Village in Andhra Pradesh","amount":"400","transaction_id":"58a7a2fb-51cb-4951-a329-a17defddf3e1","image_path":"uploaded_image.jpg"},
+    {"id":"21","name":"Govardhan","phone":"9701533706","catering_details":"Badevaripalem, Village in Andhra Pradesh","amount":"400","transaction_id":"4e0ffc31-a3d5-4e2c-98be-88e7b9e36440","image_path":"uploaded_image.jpg"},
+    {"id":"22","name":"Bharat","phone":"9347342067","catering_details":"Badevaripalem, Village in Andhra Pradesh","amount":"400","transaction_id":"57deaf7f-1524-4164-969e-98c5edf8c973","image_path":"uploaded_image.jpg"},
+    {"id":"23","name":"Narasimha naik","phone":"9014228602","catering_details":"Badevaripalem, Village in Andhra Pradesh","amount":"400","transaction_id":"a8cf4b5c-35d9-4f1e-a256-07667ad4a8c0","image_path":"uploaded_image.jpg"},
+    {"id":"24","name":"vijay vardhan","phone":"8328600479","catering_details":"Badevaripalem, Village in Andhra Pradesh","amount":"400","transaction_id":"3a92b854-b9a8-43d6-b2b5-ea8fd5ce1ac4","image_path":"uploaded_image.jpg"},
+    {"id":"25","name":"Lucky makam","phone":"9392519586","catering_details":"Badevaripalem, Village in Andhra Pradesh","amount":"420","transaction_id":"20b802c6-dd9d-462b-97bf-8a4f5ea364df","image_path":"uploaded_image.jpg"},
+    {"id":"26","name":"Kishore Babu","phone":"9502037912","catering_details":"Badevaripalem, Village in Andhra Pradesh","amount":"400","transaction_id":"42d127b3-80ea-47fa-9918-8090b661b7bd","image_path":"uploaded_image.jpg"},
+    {"id":"27","name":"Tharun","phone":"6301719791","catering_details":"Badevaripalem, Village in Andhra Pradesh","amount":"400","transaction_id":"9b2e3bb0-c030-43b5-831b-10bfe94ffe55","image_path":"uploaded_image.jpg"},
+    {"id":"30","name":"Bharath","phone":"9347342067","catering_details":"Ravula Kollu ,Time:10:00 clock","amount":"400","transaction_id":"ae2470b6-f43b-4611-84d6-8994b7dd31ff","image_path":"uploaded_image.jpg"},
+    {"id":"33","name":"B.Govardhan","phone":"9701533706","catering_details":"Ravula Kollu ,Time:10:00 clock","amount":"400","transaction_id":"5f12d215-5d66-4f2a-b4cc-a5719f59f368","image_path":"uploaded_image.jpg"},
+    {"id":"34","name":"Deepak","phone":"7842242601","catering_details":"Ravula Kollu ,Time:10:00 clock","amount":"400","transaction_id":"721dbe4e-01d3-4b84-8417-121b19e9d8b2","image_path":"uploaded_image.jpg"},
+    {"id":"35","name":"Hari","phone":"9700483704","catering_details":"Ravula Kollu ,Time:10:00 clock","amount":"400","transaction_id":"1c009993-0d78-49cb-9dcd-d61abd7d353c","image_path":"uploaded_image.jpg"},
+    {"id":"36","name":"Boona","phone":"79811 39131","catering_details":"Ravula Kollu ,Time:10:00 clock","amount":"400","transaction_id":"d369e0c8-7b84-4a00-b89c-9cc3ad3f81e8","image_path":"uploaded_image.jpg"},
+    {"id":"37","name":"Vadde Nagaraju","phone":"7671922642","catering_details":"Ravula Kollu ,Time:10:00 clock","amount":"400","transaction_id":"2ca56ed1-3a0e-4c31-9a59-3bec455c47ea","image_path":"uploaded_image.jpg"},
+    {"id":"38","name":"Saidavali ","phone":"8688311436","catering_details":"Kondamudusupalem Catering ","amount":"400","transaction_id":"9fbf6269-c1eb-4286-a112-ef1a95f86466","image_path":"uploaded_image.jpg"},
+    {"id":"39","name":"Seru praveen ","phone":"7207329629","catering_details":"Kondamudusupalem","amount":"400","transaction_id":"a3a50c8b-67ac-407e-b757-a9b2da241211","image_path":"uploaded_image.jpg"},
+    {"id":"40","name":"M.KISHORE ","phone":"9392519586","catering_details":"Kondamudusupalem","amount":"400","transaction_id":"7dfaabd1-17b0-4eb8-94a5-e988d0b4cafb","image_path":"uploaded_image.jpg"},
+    {"id":"41","name":"Dondeti venkat Sai amarnath Reddy ","phone":"9182840851","catering_details":"Kondamudusupalem","amount":"400","transaction_id":"76a0037e-2761-4849-9372-10e274fa4351","image_path":"uploaded_image.jpg"},
+    {"id":"42","name":"Narendra babu K","phone":"8978900648","catering_details":"Kondamudusupalem","amount":"400","transaction_id":"dad2faa3-984e-45fe-a9e6-8f194aec98f5","image_path":"uploaded_image.jpg"},
+    {"id":"43","name":"B.BANU PRAKASH","phone":"9959100834","catering_details":"Kondamudusupalem","amount":"400","transaction_id":"608b2468-edf2-49bf-8d2f-4ec7c670a3d7","image_path":"uploaded_image.jpg"},
+    {"id":"44","name":"Dayakar","phone":"9959982628","catering_details":"Kondamudusupalem","amount":"400","transaction_id":"bbd45f0f-bcfc-49b5-8a00-af1e077c4aec","image_path":"uploaded_image.jpg"},
+    {"id":"45","name":"Tony","phone":"7672023397","catering_details":"Kondamudusupalem","amount":"400","transaction_id":"9505c247-b160-4bec-b26f-a7d3ca474050","image_path":"uploaded_image.jpg"},
+    {"id":"46","name":"vishnu","phone":"96185 60412","catering_details":"Kondamudusupalem","amount":"400","transaction_id":"c5b41b60-a404-4ae4-8311-7296b73cff1a","image_path":"uploaded_image.jpg"},
+    {"id":"47","name":"M.K.Deepak","phone":"7842242601","catering_details":"Thank you For Your Responce\r\n","amount":"400","transaction_id":"5841b7f9-7cf3-47ad-82c9-13addbcec04f","image_path":"uploaded_image.jpg"},
+    {"id":"48","name":"Vadde Nagaraju ","phone":"7671922642","catering_details":"Thank you For Your Responce\r\n","amount":"400","transaction_id":"63f31021-efd0-473d-ba2d-735dbe649718","image_path":"uploaded_image.jpg"},
+    {"id":"49","name":"M.KISHORE ","phone":"9392519586","catering_details":"Thank you For Your Responce\r\n","amount":"400","transaction_id":"0d839f63-669d-4661-b478-b417b52d1bf5","image_path":"uploaded_image.jpg"},
+    {"id":"50","name":"Narendra babu K","phone":"8978900648","catering_details":"Thank you For Your Responce","amount":"400","transaction_id":"c8ed1414-3a97-4ef6-91c2-345920921d9e","image_path":"uploaded_image.jpg"},
+    {"id":"51","name":"Bhanu","phone":"9959100834","catering_details":"Thank you For Your Responce","amount":"400","transaction_id":"1e0cad15-b24c-4222-bf84-bdaf96754892","image_path":"uploaded_image.jpg"},
+    {"id":"52","name":"Dayakar","phone":"9959982628","catering_details":"Thank you For Your Responce","amount":"400","transaction_id":"692fae44-2d1c-4ac9-a53e-8868bc19e6a4","image_path":"uploaded_image.jpg"},
+    {"id":"53","name":"Seru praveen ","phone":"7207329629","catering_details":"Thank you For Your Responce","amount":"400","transaction_id":"bc017dc2-699e-4ce9-b50a-988bef2582ec","image_path":"uploaded_image.jpg"},
+    {"id":"54","name":"vali","phone":"8688311436","catering_details":"Thank you For Your Responce","amount":"400","transaction_id":"3df593a3-1a91-4f35-9d9b-d708ec8b2203","image_path":"uploaded_image.jpg"},
+    {"id":"55","name":"Farooq","phone":"8639626758","catering_details":"Ponnaluru\r\nVillage in Andhra Pradesh\r\n","amount":"400","transaction_id":"bcbeb3d6-424f-4bce-9ba8-3598c4394b3b","image_path":"uploaded_image.jpg"},
+    {"id":"56","name":"Boona","phone":"7981139131","catering_details":"Ponnaluru\r\nVillage in Andhra Pradesh\r\n","amount":"400","transaction_id":"ed77781b-54a6-491e-b8dc-8cbc297c8e0d","image_path":"uploaded_image.jpg"},
+    {"id":"57","name":"Go vardhan","phone":"9701533706","catering_details":"Ponnaluru\r\nVillage in Andhra Pradesh\r\n","amount":"400","transaction_id":"f1c393be-c884-448c-b67c-1a726b51a01e","image_path":"uploaded_image.jpg"},
+    {"id":"58","name":"Narendr Babu k","phone":"8978900648","catering_details":"Ponnaluru\r\nVillage in Andhra Pradesh\r\n","amount":"400","transaction_id":"14b0653c-e2c1-4d91-b3e8-38e9ae4889ba","image_path":"uploaded_image.jpg"},
+    {"id":"59","name":"Bharat","phone":"9347342067","catering_details":"Ponnaluru\r\nVillage in Andhra Pradesh\r\n","amount":"400","transaction_id":"2ba7b594-2ed2-4e27-890e-da66e5bf1fac","image_path":"uploaded_image.jpg"},
+    {"id":"60","name":"Dayakar","phone":"9959982628","catering_details":"Ponnaluru\r\nVillage in Andhra Pradesh\r\n","amount":"400","transaction_id":"9efe1890-dffd-43e7-808f-1405776322b9","image_path":"uploaded_image.jpg"},
+    {"id":"61","name":"Dayakar","phone":"9959982628","catering_details":"Paleti Gangamma Temple, Vengalapuram, Boganampadu, Andhra Pradesh 52311\r\n","amount":"400","transaction_id":"24e65402-d540-4045-8bf4-855b37d79320","image_path":"uploaded_image.jpg"},
+    {"id":"63","name":"Narendr Babu k","phone":"8978900648","catering_details":"Paleti Gangamma Temple, Vengalapuram, Boganampadu, Andhra Pradesh 52311\r\n","amount":"400","transaction_id":"77b3f72d-1644-4ad1-ae0f-17d129136640","image_path":"uploaded_image.jpg"},
+    {"id":"64","name":"Bhanu","phone":"9959100834","catering_details":"Paleti Gangamma Temple, Vengalapuram, Boganampadu, Andhra Pradesh 52311\r\n","amount":"400","transaction_id":"eda9ed06-0737-4b13-9a16-78cf889b351d","image_path":"uploaded_image.jpg"},
+    {"id":"65","name":"Farooq","phone":"8639626758","catering_details":"Paleti Gangamma Temple, Vengalapuram, Boganampadu, Andhra Pradesh 52311\r\n","amount":"500","transaction_id":"ffd4fdcd-5488-47ad-ab36-01e1bce9451d","image_path":"uploaded_image.jpg"},
+    {"id":"67","name":"Farooq","phone":"8639626758","catering_details":"Happy Catering Bookings","amount":"700","transaction_id":"808dc125-eaed-4b57-a346-7be4430d858e","image_path":"uploaded_image.jpg"},
+    {"id":"68","name":"Farooq","phone":"8639626758","catering_details":"Kandukur To Kandukur","amount":"400","transaction_id":"a3f1a361-1d83-438e-869c-435f2c0af964","image_path":"uploaded_image.jpg"},
+    {"id":"70","name":"Farooq","phone":"8639626758","catering_details":"Badevaripalem,AP","amount":"400","transaction_id":"221cccf8-a052-4318-b5b5-ea4d81076275","image_path":"uploaded_image.jpg"},
+    {"id":"71","name":"Deepak","phone":"7842242601","catering_details":"Badevaripalem,AP","amount":"400","transaction_id":"b3c9fd4d-a638-4d60-bcfe-983e533308dd","image_path":"uploaded_image.jpg"},
+    {"id":"72","name":"Go vardhan","phone":"9701533706","catering_details":"Badevaripalem,AP","amount":"400","transaction_id":"eb108a24-5842-4cda-9280-2fb26f847d69","image_path":"uploaded_image.jpg"},
+    {"id":"73","name":"S.Praveen","phone":"7207329629","catering_details":"Badevaripalem,AP","amount":"400","transaction_id":"02b06983-cd25-4e96-9f39-c032f46711c4","image_path":"uploaded_image.jpg"},
+    {"id":"74","name":"Narendr Babu k","phone":"8978900648","catering_details":"Badevaripalem,AP","amount":"400","transaction_id":"fa2dbe7f-ecfd-44e3-ace4-a534c3c12266","image_path":"uploaded_image.jpg"},
+    {"id":"83","name":"Ravi","phone":"9666759823","catering_details":"Pokuru","amount":"450","transaction_id":"3ef13318-5e4e-4e28-a3f2-d4a3bd641382","image_path":"uploaded_image.jpg"},
+    {"id":"84","name":"Siva","phone":"8247227904","catering_details":"Pokuru","amount":"450","transaction_id":"d8bb1223-9060-463a-8f53-78137aa89f8d","image_path":"uploaded_image.jpg"},
+    {"id":"85","name":"D.vali","phone":"8688311436","catering_details":"Pokuru","amount":"450","transaction_id":"868e033f-6503-45fc-8a5c-2fecd170a2f9","image_path":"uploaded_image.jpg"},
+    {"id":"86","name":"S.praveen","phone":"7207329629","catering_details":"Pokuru","amount":"450","transaction_id":"15190255-2107-4f9f-9664-ec34dd86c9ab","image_path":"uploaded_image.jpg"},
+    {"id":"87","name":"Vijay","phone":"8328600479","catering_details":"Pokuru","amount":"450","transaction_id":"6d44b1af-302e-4cd1-9a5c-001ba7f0c9d7","image_path":"uploaded_image.jpg"},
+    {"id":"88","name":"M.kishore","phone":"9392519586","catering_details":"Pokuru","amount":"450","transaction_id":"3413ca27-0c7e-4781-a1a9-fce0732de940","image_path":"uploaded_image.jpg"},
+    {"id":"89","name":"Icon star maari ","phone":"9392537946","catering_details":"Sakhavaram","amount":"400","transaction_id":"8a8ce801-24f4-439b-a317-85eb6332e2f5","image_path":"uploaded_image.jpg"},
+    {"id":"90","name":"Mandati krishna deepak kumar reddy","phone":"7842242601","catering_details":"Sakhavaram","amount":"400","transaction_id":"3262d441-9e3c-4c10-bdc6-8834d14ce59b","image_path":"uploaded_image.jpg"},
+    {"id":"91","name":"Farooq","phone":"8639626758","catering_details":"Sakhavaram","amount":"400","transaction_id":"971a463f-9dbd-45bd-8e68-176aef1f3557","image_path":"uploaded_image.jpg"},
+    {"id":"92","name":"Vadde Nagaraju","phone":"7671922642","catering_details":"Sakhavaram","amount":"400","transaction_id":"18a5e87c-0ba6-4352-b396-19180149c399","image_path":"uploaded_image.jpg"},
+    {"id":"93","name":"Bhanu","phone":"9959100834","catering_details":"Sakhavaram","amount":"400","transaction_id":"e994ad37-1d70-4de3-adf5-031e74249493","image_path":"uploaded_image.jpg"},
+    {"id":"94","name":"Narendra","phone":"8978900648","catering_details":"Sakhavaram","amount":"400","transaction_id":"eb3d90c8-1923-474e-87c6-9a451df0826c","image_path":"uploaded_image.jpg"},
+    {"id":"95","name":"Dayakar ","phone":"9959982628","catering_details":"Sakhavaram","amount":"400","transaction_id":"642bbc7b-a1a2-4f91-9593-20222a6b7d29","image_path":"uploaded_image.jpg"},
+    {"id":"96","name":"Mani ","phone":"9502909418","catering_details":"Sakhavaram","amount":"400","transaction_id":"0861cc13-6fd8-4acc-9f1f-3468d7ab658e","image_path":"uploaded_image.jpg"},
+    {"id":"97","name":"PARISIBOYINA VIJAY VARDHAN","phone":"8328600479","catering_details":"Sakhavaram","amount":"400","transaction_id":"77d63d33-c044-4dc8-ad58-676ec88d3aae","image_path":"uploaded_image.jpg"},
+    {"id":"98","name":"POKURI PAVAN","phone":"9959852847","catering_details":"Mopadu","amount":"400","transaction_id":"18e06ad4-dc34-44e8-b09c-5eb0fc0b16b9","image_path":"uploaded_image.jpg"},
+    {"id":"99","name":"Tharun -Commander","phone":"6301719791","catering_details":"Mopadu","amount":"400","transaction_id":"90d2d528-b9db-4711-ae1c-5f843287cc7e","image_path":"uploaded_image.jpg"},
+    {"id":"100","name":"Icon star maari ","phone":"9392537946","catering_details":"Mopadu","amount":"400","transaction_id":"47c07630-f4b0-494b-b54c-3fc4aa3f1c49","image_path":"uploaded_image.jpg"},
+    {"id":"101","name":"Vishnu vardhan","phone":"9381360530","catering_details":"Mopadu","amount":"400","transaction_id":"650dfa87-cbb9-4159-bafa-d4608efea1d6","image_path":"uploaded_image.jpg"},
+    {"id":"102","name":"Vadde Nagaraju","phone":"7671922642","catering_details":"Mopadu","amount":"400","transaction_id":"278f4877-5152-40d2-932f-30ed54780ffe","image_path":"uploaded_image.jpg"},
+    {"id":"103","name":"John ","phone":"8008930602","catering_details":"Mopadu","amount":"400","transaction_id":"cc6f597c-75bf-4927-9e70-07b43740a022","image_path":"uploaded_image.jpg"},
+    {"id":"104","name":"Vijay","phone":"8897790638","catering_details":"Mopadu","amount":"400","transaction_id":"f188c091-85d3-4967-960c-d1a0f65aacd7","image_path":"uploaded_image.jpg"},
+    {"id":"105","name":"KALLAM.OM SAI KRISHNA REDDY ","phone":"7207062881","catering_details":"Mopadu","amount":"400","transaction_id":"eca6f1dd-177d-43e7-b3a7-34748140a9d3","image_path":"uploaded_image.jpg"},
+    {"id":"106","name":"Farooq","phone":"8639626758","catering_details":"Mopadu","amount":"400","transaction_id":"40f53e9f-7f3d-4bf5-8f3d-e4bce194bb47","image_path":"uploaded_image.jpg"},
+    {"id":"107","name":"vijay vardhan","phone":"8328600479","catering_details":"Mopadu","amount":"400","transaction_id":"f33d3b2f-fce5-4a84-b72c-566d3aaa709c","image_path":"uploaded_image.jpg"},
+    {"id":"108","name":"Balu","phone":"9182590085","catering_details":"Mopadu","amount":"400","transaction_id":"82ec7551-2c25-4c4f-ba53-bb52b6e2c8fc","image_path":"uploaded_image.jpg"},
+    {"id":"109","name":"Kethu venkata ramana reddy ","phone":"6305732012","catering_details":"Mopadu","amount":"400","transaction_id":"67953b5e-2b40-4d51-a6ac-e72567298403","image_path":"uploaded_image.jpg"},
+    {"id":"110","name":"Surendra","phone":"8096617124","catering_details":"Mopadu","amount":"400","transaction_id":"040caf14-eca0-42ec-9464-1e0ac3b00de9","image_path":"uploaded_image.jpg"},
+    {"id":"111","name":"Sai Krishna ","phone":"8143252068","catering_details":"Mopadu","amount":"400","transaction_id":"5da05dce-3328-4a3c-9cd0-930582a09e98","image_path":"uploaded_image.jpg"},
+    {"id":"112","name":"Havyesh ","phone":"6303788826","catering_details":"Mopadu","amount":"400","transaction_id":"c1176c2c-531d-4046-86fd-3a7e44da10fa","image_path":"uploaded_image.jpg"},
+    {"id":"113","name":"P venkata pavan","phone":"7671898683","catering_details":"Mopadu","amount":"400","transaction_id":"40a47983-efb0-48e7-8406-81d098bc7a60","image_path":"uploaded_image.jpg"},
+    {"id":"114","name":"Guna","phone":"9573875359","catering_details":"Mopadu","amount":"400","transaction_id":"7af89157-e237-4af3-a37b-2854be31facd","image_path":"uploaded_image.jpg"},
+    {"id":"115","name":"P.SURYA PRAKASH","phone":"7671883188","catering_details":"Mopadu","amount":"400","transaction_id":"3b7d6ce7-634a-4a5e-b960-f607069e18bb","image_path":"uploaded_image.jpg"},
+    {"id":"116","name":"Naveen","phone":"8187001137","catering_details":"Mopadu","amount":"400","transaction_id":"95c6aecb-c6c4-44e6-a9f0-cef71ef5ebeb","image_path":"uploaded_image.jpg"},
+    {"id":"117","name":"Saidavali ","phone":"8688311436","catering_details":"Polineni Palem","amount":"800","transaction_id":"b1a0e5a6-7204-4663-83e4-5919ae58a7a1","image_path":"uploaded_image.jpg"},
+    {"id":"118","name":"Ravi","phone":"9666759823","catering_details":"Polineni Palem","amount":"800","transaction_id":"faa89a7e-e331-4807-bcde-4b6aab046878","image_path":"uploaded_image.jpg"},
+    {"id":"119","name":"Dsai","phone":"8464901393","catering_details":"Polineni Palem","amount":"800","transaction_id":"de585b4d-96c1-4223-9275-c99c3faf03fe","image_path":"uploaded_image.jpg"},
+    {"id":"120","name":"Praveen","phone":"7207329629","catering_details":"Polineni Palem","amount":"800","transaction_id":"bc89b80f-4509-4fa6-a8d8-61ab06e81bec","image_path":"uploaded_image.jpg"},
+    {"id":"121","name":"POKURI PAVAN","phone":"9959852847","catering_details":"Polineni Palem","amount":"800","transaction_id":"00d36dd5-87b7-4698-8cc8-c336686de008","image_path":"uploaded_image.jpg"},
+    {"id":"122","name":"Icon star maari ","phone":"9392537946","catering_details":"Polineni Palem","amount":"800","transaction_id":"83c1b7ee-003e-40cf-8b15-a4c52f2fce21","image_path":"uploaded_image.jpg"},
+    {"id":"123","name":"Deepak","phone":"7842242601","catering_details":"Polineni Palem","amount":"400","transaction_id":"4ce3d4a3-45d9-42ec-9d72-c86a828863b6","image_path":"uploaded_image.jpg"},
+    {"id":"124","name":"Farooq","phone":"8639626758","catering_details":"Polineni Palem","amount":"400","transaction_id":"71194ac0-9aa8-46c6-bc8b-138cf75a659f","image_path":"uploaded_image.jpg"},
+    {"id":"125","name":"Vadde Nagaraju","phone":"7671922642","catering_details":"Polineni Palem","amount":"400","transaction_id":"10a1398e-553b-4982-85bf-4bf1e5f0bd7d","image_path":"uploaded_image.jpg"},
+    {"id":"126","name":"PARISIBOYINA VIJAY VARDHAN","phone":"8328600479","catering_details":"Polineni Palem","amount":"400","transaction_id":"7a35d4c1-5e32-4b11-97a5-067c0b5b0c64","image_path":"uploaded_image.jpg"},
+    {"id":"127","name":"Mani ","phone":"9502909418","catering_details":"Polineni Palem","amount":"400","transaction_id":"4d672b19-dc8c-4669-938c-62b0abc1eaef","image_path":"uploaded_image.jpg"},
+    {"id":"128","name":"Bhanu","phone":"9959100834","catering_details":"Polineni Palem","amount":"400","transaction_id":"bf2fb9f6-89a7-4e2e-8c5c-08e5ec4aab7c","image_path":"uploaded_image.jpg"},
+    {"id":"129","name":"Narendra","phone":"8978900648","catering_details":"Polineni Palem","amount":"400","transaction_id":"46a87ccc-f8f1-411f-abbc-322b5e255bdf","image_path":"uploaded_image.jpg"},
+    {"id":"130","name":"Dayakar ","phone":"9959982628","catering_details":"Polineni Palem","amount":"400","transaction_id":"c9eed1c4-b0b5-48de-ac4d-408725860aff","image_path":"uploaded_image.jpg"},
+    {"id":"131","name":"Nataru Tharun Veerendra","phone":"6301082262","catering_details":"Polineni Palem","amount":"400","transaction_id":"eb2a3c0d-7eec-4896-8a11-0afcf9c1d4a2","image_path":"uploaded_image.jpg"},
+    {"id":"132","name":"Narasimha naik ","phone":"9014228602","catering_details":"Polineni Palem","amount":"400","transaction_id":"dd532f84-d2c4-447a-8a08-e326a7fef528","image_path":"uploaded_image.jpg"},
+    {"id":"133","name":"Om sai ","phone":"7207062881","catering_details":"Polineni Palem","amount":"400","transaction_id":"4233486b-3f77-453d-a3f1-b58c6168322d","image_path":"uploaded_image.jpg"},
+    {"id":"134","name":"Vamsi ","phone":"9182396414","catering_details":"Polineni Palem","amount":"400","transaction_id":"4dea324b-0aae-42f1-8cf8-bfc09ac0d69b","image_path":"uploaded_image.jpg"},
+    {"id":"135","name":"Tharun -Commander","phone":"6301719791","catering_details":"Polineni Palem","amount":"400","transaction_id":"c2284cf3-5f47-4e33-a350-5de4b91cc73a","image_path":"uploaded_image.jpg"},
+    {"id":"136","name":"Bharat","phone":"9347342067","catering_details":"Polineni Palem","amount":"400","transaction_id":"9c17298e-1fa3-4e71-bc30-323aa4331bf2","image_path":"uploaded_image.jpg"},
+    {"id":"137","name":"Go vardhan","phone":"9701533706","catering_details":"Polineni Palem","amount":"400","transaction_id":"278c2a82-4ddc-4a12-9b38-b8a2acbb064f","image_path":"uploaded_image.jpg"},
+    {"id":"138","name":"Boona","phone":"7981139131","catering_details":"Polineni Palem","amount":"400","transaction_id":"d304c77f-63a3-40b2-9262-99a40ad5a139","image_path":"uploaded_image.jpg"},
+    {"id":"139","name":"Nagure","phone":"9640156648","catering_details":"Polineni Palem","amount":"400","transaction_id":"e50f9d7e-b887-495a-a6e3-d1f5df30c44a","image_path":"uploaded_image.jpg"},
+    {"id":"140","name":"POKURI PAVAN","phone":"9959852847","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"f87937ed-1af1-48a2-abc2-391e4951e1bf","image_path":"uploaded_image.jpg"},
+    {"id":"141","name":"KALLAM.OM SAI KRISHNA REDDY ","phone":"7207062881","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"ddda7256-d11b-44e8-a6c0-2d783ca6be31","image_path":"uploaded_image.jpg"},
+    {"id":"142","name":"Icon star maari ","phone":"9392537946","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"71e7c394-a813-4b68-bedf-a26127dbad04","image_path":"uploaded_image.jpg"},
+    {"id":"143","name":"Vijay vardhan","phone":"8328600479","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"ff80eb36-cfb5-47da-a0ae-2b51529c4dd3","image_path":"uploaded_image.jpg"},
+    {"id":"144","name":"Prasanna","phone":"7799549365","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"3aa28d49-dabc-4f40-99a3-8341202c1a02","image_path":"uploaded_image.jpg"},
+    {"id":"145","name":"Shanmukha tarun reddy Kotla","phone":"6301719791","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"6c93d5f5-d0a1-4412-8ff5-6e7e62420143","image_path":"uploaded_image.jpg"},
+    {"id":"146","name":"Tharun","phone":"6301082262","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"89c534c0-fec3-4b05-ae22-93a981f74061","image_path":"uploaded_image.jpg"},
+    {"id":"147","name":"Farooq","phone":"8639626758","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"a1ade520-757e-479d-a730-c4ce111c0d62","image_path":"uploaded_image.jpg"},
+    {"id":"148","name":"Nagaraju","phone":"7671922642","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"b70eb398-7b73-42a3-af42-e78e308b3d7c","image_path":"uploaded_image.jpg"},
+    {"id":"149","name":"Naveen ","phone":"8187001137","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"28f9d800-a7fe-4584-aa64-e6a061b95f01","image_path":"uploaded_image.jpg"},
+    {"id":"150","name":"Vijay","phone":"8897790638","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"18eeb8e1-019f-4727-92f9-8195a0727642","image_path":"uploaded_image.jpg"},
+    {"id":"151","name":"John","phone":"8008930602","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"74cde28d-7082-4ab0-ab1a-5eea79b09d38","image_path":"uploaded_image.jpg"},
+    {"id":"152","name":"Dayakar ","phone":"9959982628","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"e3379b1d-8fc1-4862-8767-65e2e07cbac2","image_path":"uploaded_image.jpg"},
+    {"id":"153","name":"white Ai","phone":"9014228602","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"e2382e6e-eba3-48dc-b3a6-eac65e0f321f","image_path":"uploaded_image.jpg"},
+    {"id":"154","name":"Vamsi","phone":"7702695712","catering_details":"Singarayakonda,Badevaripalem","amount":"800","transaction_id":"c9e750eb-ba5b-4898-9267-ff6cf133e02f","image_path":"uploaded_image.jpg"}
+        ];
+
+    // Aggregate the amounts by phone number
+    const aggregatedData = transactions.reduce((acc, transaction) => {
+      if (!acc[transaction.phone]) {
+        acc[transaction.phone] = { ...transaction, amount: 0 };
+      }
+      acc[transaction.phone].amount += parseFloat(transaction.amount.replace(' Infinity', '')) || 0;
+      return acc;
+    }, {});
+
+    const aggregatedTransactions = Object.values(aggregatedData);
+
+    const ctx = document.getElementById('userEarningsChart').getContext('2d');
+    const labels = aggregatedTransactions.map(t => t.phone);
+    const amounts = aggregatedTransactions.map(t => t.amount);
+
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Earnings',
+          data: amounts,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // Finding the top earners
+    const sortedTransactions = aggregatedTransactions.sort((a, b) => b.amount - a.amount);
+    const topEarners = sortedTransactions.slice(0, 3);
+
+    const topEarningLabel = document.getElementById('topEarningLabel');
+
+    const rankImages = [
+      'https://cdn-icons-png.flaticon.com/128/744/744984.png',  // 1st rank
+      'https://cdn-icons-png.flaticon.com/128/12090/12090523.png',  // 2nd rank
+      'https://cdn-icons-png.flaticon.com/128/11006/11006261.png'   // 3rd rank
+    ];
+
+    topEarners.forEach((earner, index) => {
+      topEarningLabel.innerHTML += `
+        <div class="card">
+          <img src="${rankImages[index]}" alt="${index + 1} rank" class="icon">
+          <img src="${earner.image_path}" alt="${earner.name}">
+          <h3>Hi ${earner.name} <font>Congratulations!</font> <br>Your Are In ${index + 1}${index === 0 ? 'st' : index === 1 ? 'nd' : 'rd'} Rank</h3>
+          <p class="highlight">Phone: ${earner.phone}<br>Amount: ${earner.amount}</p>
+        </div>
+      `;
+    });
+  </script>
+</body>
+</html>
