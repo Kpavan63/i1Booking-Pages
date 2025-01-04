@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Data Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #ff007f, #ff8c00, #00bfff, #00ff00);
+            background-size: 400% 400%;
+            animation: bodyGradientAnimation 15s ease infinite;
+        }
+        .table-container, .card-container {
+            margin: 20px;
+            display: none; /* Hide content initially */
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color:black;
+            color:white;
+            text-align:center;
+        }
+        table, th, td {
+            border: 1px solid white;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            animation: bgAnimation 5s infinite;
+        }
+        @keyframes bgAnimation {
+            0% { background-color: #fff; }
+            50% { background-color: #f0f8ff; }
+            100% { background-color: #fff; }
+        }
+        @keyframes bodyGradientAnimation {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+        @media (max-width: 600px) {
+            th, td {
+                padding: 8px;
+            }
+            .card {
+                padding: 8px;
+            }
+        }
+        /* Modal styles */
+        .modal {
+            display: block; /* Show the modal by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for modal */
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s;
+            text-align: center;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .pin-inputs {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            gap: 15px; /* Add gap between circle inputs */
+        }
+        .pin-input {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            text-align: center;
+            border: 1px solid #888;
+            border-radius: 50%;
+            outline: none;
+        }
+        .modal button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .modal button:hover {
+            background-color: #0056b3;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            display: none; /* Hide initially */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pinModal" class="modal">
+        <div class="modal-content">
+            <h2>Enter PIN Code</h2>
+            <div class="pin-inputs">
+                <input type="password" maxlength="1" class="pin-input" id="pin1" oninput="moveToNext(this, 'pin2')">
+                <input type="password" maxlength="1" class="pin-input" id="pin2" oninput="moveToNext(this, 'pin3')" onkeydown="moveToPrevious(this, 'pin1')">
+                <input type="password" maxlength="1" class="pin-input" id="pin3" oninput="moveToNext(this, 'pin4')" onkeydown="moveToPrevious(this, 'pin2')">
+                <input type="password" maxlength="1" class="pin-input" id="pin4" onkeydown="moveToPrevious(this, 'pin3')" oninput="checkComplete()">
+            </div>
+            <button onclick="checkPin()">Submit</button>
+            <div id="errorMessage" class="error-message">Incorrect PIN. Please try again.</div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <h2>Data in Table Format</h2>
+        <div class="table-wrapper">
+            <table id="dataTable">
+                <thead>
+                    <tr id="tableHeader"></tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-container">
+        <h2>Data in Card Format</h2>
+        <div id="cardView"></div>
+    </div>
+
+    <script>
+        const PIN_CODE = '6300';  // Set your PIN code here
+
+        function moveToNext(current, nextFieldID) {
+            if (current.value.length === 1) {
+                document.getElementById(nextFieldID).focus();
+            }
+        }
+
+        function moveToPrevious(current, previousFieldID) {
+            if (current.value.length === 0 && event.key === "Backspace") {
+                document.getElementById(previousFieldID).focus();
+            }
+        }
+
+        function checkComplete() {
+            const pin1 = document.getElementById('pin1').value;
+            const pin2 = document.getElementById('pin2').value;
+            const pin3 = document.getElementById('pin3').value;
+            const pin4 = document.getElementById('pin4').value;
+
+            if (pin1 && pin2 && pin3 && pin4) {
+                checkPin();
+            }
+        }
+
+        function checkPin() {
+            const pin1 = document.getElementById('pin1').value;
+            const pin2 = document.getElementById('pin2').value;
+            const pin3 = document.getElementById('pin3').value;
+            const pin4 = document.getElementById('pin4').value;
+            const enteredPin = pin1 + pin2 + pin3 + pin4;
+
+            if (enteredPin === PIN_CODE) {
+                document.getElementById('pinModal').style.display = 'none';
+                document.querySelector('.table-container').style.display = 'block';
+                document.querySelector('.card-container').style.display = 'block';
+
+                // Steinhq API URL
+                const API_URL = 'https://api.steinhq.com/v1/storages/6651f7d2b030b46c843a34fd/Sheet1';
+
+                fetch(API_URL)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            const tableHeader = document.getElementById('tableHeader');
+                            const tableBody = document.getElementById('tableBody');
+                            const cardView = document.getElementById('cardView');
+
+                            // Generate table headers
+                            const headers = Object.keys(data[0]);
+                            headers.forEach(header => {
+                                const th = document.createElement('th');
+                                th.innerText = header;
+                                tableHeader.appendChild(th);
+                            });
+
+                            // Generate table rows and card views
+                            data.forEach(row => {
+                                const tr = document.createElement('tr');
+                                const card = document.createElement('div');
+                                card.classList.add('card');
+
+                                headers.forEach(header => {
+                                    const td = document.createElement('td');
+                                    td.innerText = row[header];
+                                    tr.appendChild(td);
+
+                                    const p = document.createElement('p');
+                                    p.innerText = `${header}: ${row[header]}`;
+                                    card.appendChild(p);
+                                });
+
+                                tableBody.appendChild(tr);
+                                cardView.appendChild(card);
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>
